@@ -13,7 +13,7 @@ def create_app(settings_override=None):
     from restaurant_api.database import db
     db.app = app
     db.init_app(app)
-
+    db.create_all()
     app.register_blueprint(api_views.bp)
 
     return app
