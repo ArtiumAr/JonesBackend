@@ -1,0 +1,2 @@
+FLASK_APP=restaurant_api
+FLASK_ENV=development
