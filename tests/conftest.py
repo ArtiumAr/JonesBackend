@@ -10,9 +10,6 @@ import pytest
 @pytest.fixture
 def client():
     app = create_app('config.settings.TestConfig')
-    db.app = app
-    db.init_app(app)
-    db.create_all()
 
     with app.test_client() as client:
         yield client

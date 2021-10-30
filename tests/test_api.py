@@ -1,8 +1,8 @@
 def order(client, customer_name, dish, comments):
     rv = client.post('/api/place-order', json={
-        "customer_name":"tioma",
-        "dish":"pizza",
-        "comments": "no onions"
+        "customer_name":customer_name,
+        "dish":dish,
+        "comments": comments
     }, follow_redirects=True).get_json()
     return rv
 
@@ -27,4 +27,5 @@ def test_get_orders(client):
     order(client, "tioma", "burger", "medium rare")
     order(client, "tioma", "carbonara", "extra pepper")
     rv = client.get('/api/orders').get_json()
+    print(rv)
     assert len(rv) == 3

@@ -14,7 +14,7 @@ class Order(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     customer_name = db.Column(db.String(80), unique=False, nullable=False)
-    dish = db.Column(db.String(120), unique=False, nullable=False)
+    dish = db.Column(db.String(120), db.ForeignKey('menuitems.dish'), unique=False, nullable=False)
     comments = db.Column(db.String(120), unique=False, nullable=False)
     order_time = db.Column(db.DateTime(), index=False, default=datetime.now())
 
@@ -23,7 +23,9 @@ class Order(db.Model):
 
 @dataclass
 class MenuItem(db.Model):
+    id: int
     dish:str
 
     __tablename__ = "menuitems"
-    dish = db.Column(db.String(80), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    dish = db.Column(db.String(80), unique=True, nullable=False)
