@@ -20,14 +20,14 @@ def order():
     if not customer_name or not dish:
         my_json = {"order status": "failure", "error":"wrong order format"}
         http_code = 500
-        current_app.logger.info('failed order.\t wrong order format. \targs:\t name: {}, dish: {}, comments: {}'.format(customer_name, dish, comments))
+        logging.getLogger('werkzeug').info('failed order.\t wrong order format. \targs:\t name: {}, dish: {}, comments: {}'.format(customer_name, dish, comments))
         return my_json, http_code
 
     exists = db.session.query(MenuItem.dish).filter_by(dish=dish).first() is not None
     if not exists:
         my_json = {"order status": "failure", "error":"dish not in menu"}
         http_code = 500
-        current_app.logger.info('failed order.\t dish not in menu. \targs:\t name: {}, dish: {}, comments: {}'.format(customer_name, dish, comments))
+        logging.getLogger('werkzeug').info('failed order.\t dish not in menu. \targs:\t name: {}, dish: {}, comments: {}'.format(customer_name, dish, comments))
         return my_json, http_code
 
     order = Order(customer_name=customer_name, dish=dish, comments=comments)

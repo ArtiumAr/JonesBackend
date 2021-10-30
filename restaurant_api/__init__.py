@@ -15,7 +15,7 @@ def create_app(config_object='config.settings.DevConfig'):
     db.init_app(app)
     db.create_all()
     app.register_blueprint(api_views.bp)
-    # if db.session.
+    
     if not MenuItem.query.all():
         load_menu(db, "restaurant_api/menu_v1.csv")
 
@@ -30,6 +30,3 @@ def load_menu(db, menu_file_name):
         csv_reader = csv.reader(csvfile, delimiter=',')
         db.session.bulk_insert_mappings(MenuItem, [{'dish': row[0]} for row in csv_reader])
         db.session.commit()
-
-    m= MenuItem.query.all()
-    print(m)
