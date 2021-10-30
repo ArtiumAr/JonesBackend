@@ -8,7 +8,6 @@ flask = "*"
 pytest = "*"
 flask-sqlalchemy = "*"
 python-dotenv = "*"
-pytest-flask = "*"
 
 [dev-packages]
 
