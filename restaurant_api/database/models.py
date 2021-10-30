@@ -20,3 +20,10 @@ class Order(db.Model):
 
     def __repr__(self):
         return "Order {}:\n\tcustomer : {}\n\tdish:{}\n\tcomments:{}\n\torder time:{}".format(self.id, self.customer_name, self.dish, self.comments, self.order_time)
+
+@dataclass
+class MenuItem(db.Model):
+    dish:str
+
+    __tablename__ = "menuitems"
+    dish = db.Column(db.String(80), primary_key=True)
