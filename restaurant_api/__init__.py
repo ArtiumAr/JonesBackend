@@ -2,14 +2,11 @@ from . import api_views
 from flask import Flask
 
 
-def create_app(settings_override=None):
+def create_app(config_object='config.settings.DevConfig'):
     app = Flask(__name__, instance_relative_config=True)
 
-    app.config.from_object('config.settings')
+    app.config.from_object(config_object)
 
-    if settings_override:
-        app.config.update(settings_override)
-    
     from restaurant_api.database import db
     db.app = app
     db.init_app(app)
