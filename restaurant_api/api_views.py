@@ -17,7 +17,7 @@ def handle_invalid_usage(error):
 
 
 @bp.errorhandler(Exception)
-def handle_invalid_usage():
+def handle_generic_error(error):
     return jsonify("unexpected behavior"), 500
 
 
@@ -33,7 +33,6 @@ def get_orders():
 @bp.route("/place-order", methods=["POST"])
 def order():
     data = request.get_json(force=True)
-    print(1 / 0)
     customer_name = data.get("customer_name")
     dish = data.get("dish")
     comments = data.get("comments")
@@ -48,7 +47,7 @@ def order():
     exists = db.session.query(MenuItem.dish).filter_by(dish=dish).first() is not None
     if not exists:
         raise InvalidUsage(
-            "failed order. dish not in menu",
+            "Failed order. dish not in menu",
             status_code=500,
             payload={"args": [customer_name, dish, comments]},
         )
@@ -57,17 +56,12 @@ def order():
     db.session.add(order)
     db.session.commit()
     logging.getLogger("werkzeug").info(
-        "successful order. \targs:\t name: {}, dish: {}, comments: {}".format(
+        "Successful order. \targs:\t name: {}, dish: {}, comments: {}".format(
             customer_name, dish, comments
         )
     )
 
     return {
         "order status": "success",
-        "order details": {
-            "id": order.id,
-            "customer_name": order.customer_name,
-            "dish": order.dish,
-            "comments": order.comments,
-        },
+        "order details": order,
     }
