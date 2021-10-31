@@ -5,8 +5,16 @@ import datetime
 from restaurant_api.database import db
 from flask import current_app
 import logging
+from restaurant_api.exception import InvalidUsage
 
 bp = Blueprint("api_views", __name__, url_prefix="/api")
+
+
+@bp.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 @bp.route("/place-order", methods=["POST"])
@@ -18,25 +26,19 @@ def order():
     comments = json.get("comments")
 
     if not customer_name or not dish:
-        my_json = {"order status": "failure", "error": "wrong order format"}
-        http_code = 500
-        logging.getLogger("werkzeug").info(
-            "failed order.\t wrong order format. \targs:\t name: {}, dish: {}, comments: {}".format(
-                customer_name, dish, comments
-            )
+        raise InvalidUsage(
+            "failed order. Wrong order format",
+            status_code=500,
+            payload={"args": [customer_name, dish, comments]},
         )
-        return my_json, http_code
 
     exists = db.session.query(MenuItem.dish).filter_by(dish=dish).first() is not None
     if not exists:
-        my_json = {"order status": "failure", "error": "dish not in menu"}
-        http_code = 500
-        logging.getLogger("werkzeug").info(
-            "failed order.\t dish not in menu. \targs:\t name: {}, dish: {}, comments: {}".format(
-                customer_name, dish, comments
-            )
+        raise InvalidUsage(
+            "failed order. dish not in menu",
+            status_code=500,
+            payload={"args": [customer_name, dish, comments]},
         )
-        return my_json, http_code
 
     order = Order(customer_name=customer_name, dish=dish, comments=comments)
     db.session.add(order)
