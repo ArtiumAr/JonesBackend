@@ -26,9 +26,9 @@ def test_none_menu_orders(client):
 
 
 def test_get_orders(client):
+    """Test that API properly sends the right amount of orders."""
     order(client, "tioma", "pizza", "no onions")
     order(client, "tioma", "burger", "medium rare")
     order(client, "tioma", "carbonara", "extra pepper")
     rv = client.get("/api/orders").get_json()
-    print(rv)
     assert len(rv) == 3
